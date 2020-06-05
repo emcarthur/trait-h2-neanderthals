@@ -1,0 +1,65 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.0
+* (C) 2014-2015 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--ref-ld-chr LDSC/tutorial_files/eur_w_ld_chr/ \
+--out Sunburn_Tanning \
+--rg LDSC/data/GWAS/Sunburn/Sunburn.sumstats.gz,LDSC/data/GWAS/Tanning/Tanning.sumstats.gz \
+--w-ld-chr LDSC/tutorial_files/eur_w_ld_chr/ 
+
+Beginning analysis at Mon Apr 13 16:24:49 2020
+Reading summary statistics from LDSC/data/GWAS/Sunburn/Sunburn.sumstats.gz ...
+Read summary statistics for 1187056 SNPs.
+Reading reference panel LD Score from LDSC/tutorial_files/eur_w_ld_chr/[1-22] ...
+Read reference panel LD Scores for 1290028 SNPs.
+Removing partitioned LD Scores with zero variance.
+Reading regression weight LD Score from LDSC/tutorial_files/eur_w_ld_chr/[1-22] ...
+Read regression weight LD Scores for 1290028 SNPs.
+After merging with reference panel LD, 1171359 SNPs remain.
+After merging with regression SNP LD, 1171359 SNPs remain.
+Computing rg for phenotype 2/2
+Reading summary statistics from LDSC/data/GWAS/Tanning/Tanning.sumstats.gz ...
+Read summary statistics for 1187056 SNPs.
+After merging with summary statistics, 1171359 SNPs remain.
+1171359 SNPs with valid alleles.
+
+Heritability of phenotype 1
+---------------------------
+Total Observed scale h2: 0.0876 (0.0217)
+Lambda GC: 1.3495
+Mean Chi^2: 1.7043
+Intercept: 1.0815 (0.0767)
+Ratio: 0.1157 (0.109)
+
+Heritability of phenotype 2/2
+-----------------------------
+Total Observed scale h2: 0.1562 (0.0721)
+Lambda GC: 1.3747
+Mean Chi^2: 2.7177
+Intercept: 1.1598 (0.2329)
+Ratio: 0.093 (0.1356)
+
+Genetic Covariance
+------------------
+Total Observed scale gencov: -0.0674 (0.0377)
+Mean z1*z2: -0.7651
+Intercept: -0.1565 (0.131)
+
+Genetic Correlation
+-------------------
+Genetic Correlation: -0.5763 (0.1487)
+Z-score: -3.8761
+P: 0.0001
+
+
+Summary of Genetic Correlation Results
+p1                                          p2      rg      se       z       p  h2_obs  h2_obs_se  h2_int  h2_int_se  gcov_int  gcov_int_se
+LDSC/data/GWAS/Sunburn/Sunburn.sumstats.gz  LDSC/data/GWAS/Tanning/Tanning.sumstats.gz -0.5763  0.1487 -3.8761  0.0001  0.1562     0.0721  1.1598     0.2329   -0.1565        0.131
+
+Analysis finished at Mon Apr 13 16:25:09 2020
+Total time elapsed: 19.41s

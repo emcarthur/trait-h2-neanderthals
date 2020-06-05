@@ -1,0 +1,70 @@
+###
+#   Creator      | Evonne McArthur
+#   Created      | 2020-05-08
+#   Last Updated | 2020-05-08
+###
+
+Data for paper:
+[Name]
+[Location]
+
+
+
+''' ./data/partitioned_h2/ ''': Partitioned heritability results from S-LDSC
+-- introgressed Regions - enrichment, p value, stderr
+-- introgressed Snps - enrichment, p value, stderr
+-- ukbb
+-- raw files
+
+- sumstats domains info
+
+''' ./data/input_neanderthal_regions/ ''': input regions generated from Sprime results from Browning18, used in LDSC & SLDP analyses
+  # [CEU, TSI, FIN, GBR, ISB]_sprime_segments_neanMatchingFilter.bed:
+    All segments for each population matching a filter that gives us some confidence that these regions are introgressed from neanderthals. The filters are that there must be at least 30 alleles that could be compared with neanderthal (nmatch + nmismatch) >= 30. And that the proportion of alleles that could be compared matches neanderthal >= 30% of the time nmatch/(nmatch + nmismatch) >=.3
+    The columns are chr, start, stop, number of alleles that match the neanderthal allele in that segment, number of alleles that don't match neanderthal, and number of alleles that you can't compare (likely due to quality issues)
+  # ALLEUR_sprime_segments_neanMatchingFilter.bed
+    All European segments combined (union) and sorted. It's a combination of files that had the above 30+ snps and 30% match filter applied to them before combining. Created by:
+    for i in CEU FIN GBR IBS TSI; do cat "$i"_sprime_segments_neanMatchingFilter.bed >> ALLEUR_sprime_segments_neanMatchingFilter.bed; done;
+    sort -k1,1 -k2,2n ALLEUR_sprime_segments_neanMatchingFilter.bed > tmp; mv tmp ALLEUR_sprime_segments_neanMatchingFilter.bed
+    bedtools merge -i ALLEUR_sprime_segments_neanMatchingFilter.bed > tmp; mv tmp ALLEUR_sprime_segments_neanMatchingFilter.bed
+  # ALL1KG_sprime_results.bed (Set #4)
+    All SNPs with evidence of introgression from Browning18, Created by:
+    for i in *_sprime_results.tar.gz; do echo "$i"; tar xvzf "$i"; ls ./mendeley_data/* | wc -l; for j in ./mendeley_data/*; do tail -n+2 "$j" >> ALL1KG_sprime_results.txt; done; rm -r ./mendeley_data/; done
+    cut -f 1,2,3,4,5,7,9,10 ALL1KG_sprime_results.txt | sort -u > tmp; mv tmp ALL1KG_sprime_results.txt
+    for i in *.txt; do cat "$i" | awk '{print "chr"$1"\t"$2-1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' | sort -k1,1 -k2,2n > "$i".bed; done
+  # ALL1KG_NMATCH_sprime_results.bed (Set #2)
+    All SNPs with evidence of introgression & matching the neanderthal allele from Browning18, Created by:
+    cat ALL1KG_sprime_results.txt | awk '$7 == "match" {print $0}' > ALL1KG_NMATCH_sprime_results.txt
+    for i in *.txt; do cat "$i" | awk '{print "chr"$1"\t"$2-1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' | sort -k1,1 -k2,2n > "$i".bed; done
+    # ALLEUR_sprime_results.bed (Set #3)
+    All SNPs with evidence of introgression found in the European populations from Browning18, Created by:
+    for i in CEU FIN GBR IBS TSI; do echo "$i"_sprime_results.tar.gz; tar xvzf "$i"_sprime_results.tar.gz; ls ./mendeley_data/ | wc -l; for j in ./mendeley_data/*; do tail -n+2 "$j" >> EUR_sprime_results.txt; done; rm -r ./mendeley_data/; done
+    cut -f 1,2,3,4,5,7,9,10 EUR_sprime_results.txt | sort -u > tmp; mv tmp EUR_sprime_results.txt
+    for i in *.txt; do cat "$i" | awk '{print "chr"$1"\t"$2-1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' | sort -k1,1 -k2,2n > "$i".bed; done
+  # ALLEUR_NMATCH_sprime_results.bed (Set #1)
+    All SNPs with evidence of introgression found in the European populations & matching neanderthal allele from Browning18, Created by:
+    cat ALLEUR_sprime_results.txt | awk '$7 == "match" {print $0}' > EUR_NMATCH_sprime_results.txt
+    for i in *.txt; do cat "$i" | awk '{print "chr"$1"\t"$2-1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' | sort -k1,1 -k2,2n > "$i".bed; done
+  # SNPs_in_ALLEUR_sprime_segments_neanMatchingFilter.bed
+    SNPs in the ALLEUR sprime segments. The SNPs are all intersections with 1000G.EUR.allChr.bed (All SNPs from 1000G bim file /LDSC/data/1000G_EUR_Phase3_plink/1000G.EUR.QC.*.bim concatenated together. Turned into a bed file by chr pos-1 pos). The snps are intersected with the neanderthal segments matching filter (30 SNPs and 30%+ neanderthal match).
+    bedtools intersect -wb -a 1000G.EUR.allChr.bed -b ALLEUR_sprime_segments_neanMatchingFilter.bed > SNPs_in_ALLEUR_sprime_segments_neanMatchingFilter.bed
+    sort -k 1,1 -k2,2n SNPs_in_ALLEUR_sprime_segments_neanMatchingFilter.bed > tmp; mv tmp SNPs_in_ALLEUR_sprime_segments_neanMatchingFilter.bed
+  # ALL1KG_sprime_results_r2\=.5.bed
+    The ALL1KG_sprime_results.bed SNPs LD expanded to r2 >= 0.5 using David&Ling's LD2bedpartners script (using European population from 1000G). Example of command used to generate:
+    (bed2LDpartners) [mcarthe@capra1 data]$ /dors/capra_lab/users/rinkerd/bin/bed2LDpartners.py EUR 1 ALLEUR_sprime_results.bed > ALLEUR_sprime_results_r2=1.bed &
+  # SNPs_in_ALLEUR_sprime_segments_neanMatchingFilter_MINUS_ALL1KG_sprime_results_r2=.5.bed
+    SNPs in the ALLEUR sprime segments. The SNPs are all intersections with 1000G.EUR.allChr.bed. The snps are intersected with the neanderthal segments matching filter (30 SNPs and 30%+ neanderthal match). Putatively introgressed SNPs and their LD r2 >= 0.5 partners are subtracted from these regions
+    bedtools subtract -a SNPs_in_ALLEUR_sprime_segments.bed -b ALL1KG_sprime_results_r2\=.5.bed >  SNPs_in_ALLEUR_sprime_segments_MINUS_ALL1KG_sprime_results_r2=.5.bed
+    sort -k 1,1 -k2,2n SNPs_in_ALLEUR_sprime_segments_MINUS_ALL1KG_sprime_results_r2\=.5.bed > tmp; mv tmp SNPs_in_ALLEUR_sprime_segments_MINUS_ALL1KG_sprime_results_r2\=.5.bed
+
+''' ./data/input_neanderthal_regions/SLDP_input/ '''
+  Input formatted for signed LD profile regression, see ipynb for generating scripts
+
+
+
+-- input into LDSC (4 sets of SNPs, 2 sets of introgressed variants)
+
+SLDP
+-- input
+-- output (overall)
+-- snp-level output
