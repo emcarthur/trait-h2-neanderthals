@@ -1,14 +1,12 @@
 ###
 #   Creator      | Evonne McArthur
 #   Created      | 2020-05-08
-#   Last Updated | 2020-05-08
+#   Last Updated | 2020-06-25
 ###
 
 Data for paper:
-[Name]
-[Location]
-
-
+Quantifying the contribution of Neanderthal introgression to the heritability of complex traits - McArthur, Rinker, Capra
+https://www.biorxiv.org/content/10.1101/2020.06.08.140087v1
 
 ''' ./data/partitioned_h2/ ''': Partitioned heritability results from S-LDSC
 -- introgressed Regions - enrichment, p value, stderr
