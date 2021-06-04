@@ -114,13 +114,13 @@ https://www.biorxiv.org/content/10.1101/2020.06.08.140087v1
 ''' ./data/input_neanderthal_regions/SLDP_input/ '''
   Input formatted for signed LD profile regression, see ipynb for generating scripts
 
-''' ./data/SLDP_results/SLDP_results/ ''' Output from the directional analysis using Signed LD profile regression
+''' ./data/SLDP_results/ ''' Output from the directional analysis using Signed LD profile regression
   # [trait].gwresults: 
     raw output from SLDP quantifying the correlation between the Neanderthal LD profile and the marginal trait association
   # aggregate.results
     results from all the [trait].gwresults into one file
-  # [trait]snpsfile.tsv
-    the per-snp information from SLDP. For each variant, it provides information on the trait-association and the Neanderthal LD profile. The files are windowed across to find regions with high correlation between Neanderthal LD profile and marginal trait association ("interestingWindows")
+  # [trait]snpsfile.tsv.7z
+    the per-snp information from SLDP. For each variant, it provides information on the trait-association and the Neanderthal LD profile. The files are windowed across to find regions with high correlation between Neanderthal LD profile and marginal trait association ("interestingWindows"). Note these files are 7zipped
   # interestingWindows/
     raw output of windows with a high correlation between Neanderthal LD profile and marginal trait association. These are windows with a correlation coefficient > 0.5 and at least one variant marginally associated with the trait (P < 1e-4). Later processing steps merge these windows and identify windows that overlap with at least one Altai-matching Neanderthal introgressed allele (set #1 see above). With those further processing steps, we generated Table S8.
 
